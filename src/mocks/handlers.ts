@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-const interests = ['Музика', 'Спорт', 'Игри', 'Танци'];
+const interests = ['Sports', 'Music', 'Dancing', 'Games'];
 
 export const handlers = [
   http.get('/api/interests', () => {

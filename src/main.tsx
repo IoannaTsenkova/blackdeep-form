@@ -6,7 +6,7 @@ import { Provider } from "@/components/ui/provider"
 
 if (import.meta.env.DEV) {
   const { worker } = await import('./mocks/browser');
-  worker.start();
+  await worker.start();
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

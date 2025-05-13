@@ -1,33 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Box, Heading } from '@chakra-ui/react'
 import './App.css'
+import StepOneForm from './features/step-one-form'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <Heading as="h1" size="lg" mb={4} textTransform={'uppercase'}>welcome!</Heading>
+    <Heading as="h2" size="md" mb={4}>Please fill out the form to join our community!</Heading>
+    <Box as={'div'} justifyContent={'center'} display={'flex'}>
+     <StepOneForm />
+    </Box>
     </>
   )
 }
