@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const step1Schema = z.object({
+export const stepOneSchema = z.object({
   fullName: z.string().min(1, 'Please enter your name'),
   password: z.string().min(6, 'The password must be at least 6 characters long'),
   confirmPassword: z.string().min(6, 'The password must be at least 6 characters long'),
