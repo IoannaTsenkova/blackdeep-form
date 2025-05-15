@@ -6,5 +6,6 @@ export const stepTwoSchema = z.object({
     .refine(
       (file) => ['image/jpeg', 'image/png'].includes(file.type),
       { message: 'Only JPEG or PNG images are allowed' }
-    ),
+    )
+    .optional(),
 });

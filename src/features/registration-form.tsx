@@ -1,4 +1,4 @@
-import { Box, Heading, Steps } from "@chakra-ui/react";
+import { Box, Heading, Steps} from "@chakra-ui/react";
 import StepOneForm from "./step-one-form";
 import StepTwoForm from "./step-two-form";
 import { FormProvider, useForm } from "react-hook-form";

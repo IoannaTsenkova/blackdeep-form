@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Input, VStack } from "@chakra-ui/react";
+import { Box, Button, Input, VStack, useStepsContext } from "@chakra-ui/react";
 import {
   FormControl,
   FormLabel,
@@ -19,6 +19,7 @@ const StepOneForm = () => {
   >([]);
 
   const form = useFormContext<FormData>();
+  const { hasNextStep, goToNextStep } = useStepsContext();
 
   const {
     register,
@@ -38,9 +39,13 @@ const StepOneForm = () => {
       .catch(console.error);
   }, []);
 
-  const onSubmit = (data: FormData) => {
-    console.log("✅ Step 1 data:", data);
+  const onSubmit = () => {
+    console.log("✅ Step 1 submitted with:", form.getValues());
+    if (hasNextStep) {
+      goToNextStep();
+    }
   };
+
 
   return (
     <Box
@@ -83,6 +88,11 @@ const StepOneForm = () => {
           <Controller
             control={control}
             name="interests"
+            rules={{
+              required: "Please choose at least 1 interest",
+              validate: (value) =>
+                value.length <= 2 || "You can choose up to 2 interests",
+            }}
             render={({ field }) => (
               <Select
                 isMulti
@@ -113,7 +123,7 @@ const StepOneForm = () => {
         bg="#822659"
         color="white"
         _hover={{ bg: "#F487B6" }}
-        onClick={handleSubmit(onSubmit)}
+       // onClick={() => handleSubmit(onSubmit)()}
       >
         Next Step
       </Button>
