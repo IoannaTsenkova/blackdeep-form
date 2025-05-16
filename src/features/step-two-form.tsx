@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -7,40 +7,57 @@ import {
   Flex,
   Icon,
   Image,
+  useStepsContext,
   VStack,
 } from "@chakra-ui/react";
-import {
-  FormControl,
-  FormErrorMessage,
-} from "@chakra-ui/form-control";
+import { FormControl, FormErrorMessage } from "@chakra-ui/form-control";
 import { useFormContext } from "react-hook-form";
-import type { stepTwoSchema } from "@/schemas/step-two-schema";
+import { stepTwoSchema } from "@/schemas/step-two-schema";
 import type { z } from "zod";
 import { LuUpload } from "react-icons/lu";
 
 type FormData = z.infer<typeof stepTwoSchema>;
 
-const StepTwoForm = ({ onSubmit }: { onSubmit: () => void }) => {
+const StepTwoForm = ({ onFormSubmit }: { onFormSubmit: () => void }) => {
   const {
     register,
     handleSubmit,
     setError,
     setValue,
+    getValues,
     clearErrors,
     formState: { errors },
   } = useFormContext<FormData>();
+  const { goToNextStep } = useStepsContext();
 
   const [preview, setPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const onFormSubmit = (data: FormData) => {
-    console.log("✅ Step 2 submitted with:", data);
-    onSubmit();
+  const onSubmit = async () => {
+    const data = getValues();
+    const result = stepTwoSchema.safeParse(data);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      (Object.keys(fieldErrors) as (keyof typeof fieldErrors)[]).forEach(
+        (key) => {
+          setError(key, {
+            type: "manual",
+            message: fieldErrors[key]?.[0] || "Invalid",
+          });
+        }
+      );
+      return;
+    }
+
+    onFormSubmit();
+    goToNextStep();
   };
 
   return (
     <Box
       as="form"
-      onSubmit={handleSubmit(onFormSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
       width="75%"
       p={7}
       borderWidth={1}
@@ -52,26 +69,29 @@ const StepTwoForm = ({ onSubmit }: { onSubmit: () => void }) => {
           <FormControl isInvalid={!!errors.avatar} width={"70%"}>
             <FileUpload.Root alignItems="stretch" maxFiles={1}>
               {preview ? (
-                <Image
-                  src={preview}
-                  alt="Avatar Preview"
-                  boxSize="120px"
-                  borderRadius="full"
-                  objectFit="cover"
-                  mx="auto"
-                />
+                <>
+                  <Image
+                    src={preview}
+                    alt="Avatar Preview"
+                    boxSize="180px"
+                    borderRadius="full"
+                    objectFit="cover"
+                    mx="auto"
+                  />
+                  <FileUpload.List />
+                </>
               ) : (
                 <>
                   <FileUpload.HiddenInput
                     {...register("avatar")}
+                    ref={fileInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-
                       if (!file) {
+                        setValue("avatar", undefined, { shouldValidate: true });
                         setPreview(null);
                         return;
                       }
-
                       if (!file.type.startsWith("image/")) {
                         setError("avatar", {
                           type: "manual",
@@ -80,8 +100,8 @@ const StepTwoForm = ({ onSubmit }: { onSubmit: () => void }) => {
                         setPreview(null);
                         return;
                       }
-
                       clearErrors("avatar");
+                      setValue("avatar", file, { shouldValidate: true });
                       setPreview(URL.createObjectURL(file));
                     }}
                   />
@@ -96,24 +116,25 @@ const StepTwoForm = ({ onSubmit }: { onSubmit: () => void }) => {
                   </FileUpload.Dropzone>
                 </>
               )}
-              <FileUpload.List />
             </FileUpload.Root>
             <FormErrorMessage color={"#822659"}>
               {errors.avatar?.message as string}
             </FormErrorMessage>
           </FormControl>
         </Flex>
-        <ButtonGroup justifyContent={'center'} display={'flex'}>
+        <ButtonGroup justifyContent={"center"} display={"flex"}>
           {preview && (
             <Button
               bg="#822659"
-              width={'30%'}
+              width={"30%"}
               color="white"
               _hover={{ bg: "#F487B6" }}
               onClick={() => {
-                setValue("avatar", undefined);
+                setValue("avatar", undefined, { shouldValidate: true });
                 setPreview(null);
-              
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = "";
+                }
               }}
             >
               Change photo

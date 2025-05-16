@@ -19,7 +19,7 @@ const StepOneForm = () => {
   >([]);
 
   const form = useFormContext<FormData>();
-  const { hasNextStep, goToNextStep } = useStepsContext();
+  const { goToNextStep } = useStepsContext();
 
   const {
     register,
@@ -39,13 +39,24 @@ const StepOneForm = () => {
       .catch(console.error);
   }, []);
 
-  const onSubmit = () => {
-    console.log("✅ Step 1 submitted with:", form.getValues());
-    if (hasNextStep) {
-      goToNextStep();
-    }
-  };
+const onSubmit = async () => {
+  form.clearErrors();
+  const data = form.getValues();
+  const result = stepOneSchema.safeParse(data);
 
+  if (!result.success) {
+    const fieldErrors = result.error.flatten().fieldErrors;
+    (Object.keys(fieldErrors) as (keyof typeof fieldErrors)[]).forEach((key) => {
+      form.setError(key, {
+        type: "manual",
+        message: fieldErrors[key]?.[0] || "Invalid",
+      });
+    });
+    return;
+  }
+
+  goToNextStep();
+};
 
   return (
     <Box
@@ -88,11 +99,6 @@ const StepOneForm = () => {
           <Controller
             control={control}
             name="interests"
-            rules={{
-              required: "Please choose at least 1 interest",
-              validate: (value) =>
-                value.length <= 2 || "You can choose up to 2 interests",
-            }}
             render={({ field }) => (
               <Select
                 isMulti
@@ -105,7 +111,6 @@ const StepOneForm = () => {
                   );
                   field.onChange(selected);
                 }}
-                //isOptionDisabled={() => field.value.length >= 2}
                 options={interestsOptions}
                 styles={interestsCustomStyles}
               />
@@ -123,7 +128,6 @@ const StepOneForm = () => {
         bg="#822659"
         color="white"
         _hover={{ bg: "#F487B6" }}
-       // onClick={() => handleSubmit(onSubmit)()}
       >
         Next Step
       </Button>
