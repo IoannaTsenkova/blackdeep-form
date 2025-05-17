@@ -70,7 +70,10 @@ const RegistrationForm = () => {
             <Steps.Separator />
           </Steps.Item>
           <Steps.Item key={1} index={1} title={"Step 2"}>
-            <Steps.Indicator />
+            <Steps.Indicator
+              backgroundColor={"#822659"}
+              borderColor={"#F487B6"}
+            />
             <Steps.Title>Step 2</Steps.Title>
             <Steps.Separator />
           </Steps.Item>

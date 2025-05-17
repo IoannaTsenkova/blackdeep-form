@@ -39,24 +39,26 @@ const StepOneForm = () => {
       .catch(console.error);
   }, []);
 
-const onSubmit = async () => {
-  form.clearErrors();
-  const data = form.getValues();
-  const result = stepOneSchema.safeParse(data);
+  const onSubmit = async () => {
+    form.clearErrors();
+    const data = form.getValues();
+    const result = stepOneSchema.safeParse(data);
 
-  if (!result.success) {
-    const fieldErrors = result.error.flatten().fieldErrors;
-    (Object.keys(fieldErrors) as (keyof typeof fieldErrors)[]).forEach((key) => {
-      form.setError(key, {
-        type: "manual",
-        message: fieldErrors[key]?.[0] || "Invalid",
-      });
-    });
-    return;
-  }
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      (Object.keys(fieldErrors) as (keyof typeof fieldErrors)[]).forEach(
+        (key) => {
+          form.setError(key, {
+            type: "manual",
+            message: fieldErrors[key]?.[0] || "Invalid",
+          });
+        }
+      );
+      return;
+    }
 
-  goToNextStep();
-};
+    goToNextStep();
+  };
 
   return (
     <Box
@@ -70,22 +72,28 @@ const onSubmit = async () => {
     >
       <VStack align="stretch">
         <FormControl isInvalid={!!errors.fullName}>
-          <FormLabel>Full Name</FormLabel>
-          <Input {...register("fullName")} variant={"subtle"} />
+          <FormLabel htmlFor="fullName">Full Name</FormLabel>
+          <Input id="fullName" {...register("fullName")} variant={"subtle"} />
           <FormErrorMessage color={"#822659"}>
             {errors.fullName?.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.password}>
-          <FormLabel>Password</FormLabel>
-          <Input type="password" {...register("password")} variant={"subtle"} />
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <Input
+            id="password"
+            type="password"
+            {...register("password")}
+            variant={"subtle"}
+          />
           <FormErrorMessage color={"#822659"}>
             {errors.password?.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.confirmPassword}>
-          <FormLabel>Confirm Password</FormLabel>
+          <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
           <Input
+            id="confirmPassword"
             type="password"
             {...register("confirmPassword")}
             variant={"subtle"}
