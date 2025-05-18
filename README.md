@@ -1,54 +1,86 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 📝 Blackdeep Registration Form
 
-Currently, two official plugins are available:
+This multi-step registration form is built with **React**, **TypeScript**, **Chakra UI**, **React Hook Form**, **Zod**, and **Mock Service Worker (MSW)**. The form includes two steps:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **Step 1**: Collects full name, password, confirm password, and interests (with multiselect).
+2. **Step 2**: Allows uploading an avatar image with preview functionality.
 
-## Expanding the ESLint configuration
+The form includes validation, navigation between steps, and runs in both development and production environments.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🚀 Live Demo
+
+👉 [https://blackdeep-form.vercel.app](https://blackdeep-form.vercel.app)
+
+
+## Setup and Running Locally
+
+### Prerequisites
+- Node.js (>=14.x)
+- Yarn package manager (recommended)
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/IoannaTsenkova/blackdeep-form.git
+   cd blackdeep-form
+   ```
+2. Install dependencies:
+   ```bash
+   yarn install
+   ```
+3. Run the development server:
+   ```bash
+   yarn dev
+   ```
+4. Open your browser and navigate to `http://localhost:5173` to see the app running.
+
+## 🧪 Running Tests
+
+This project uses **Vitest** and **React Testing Library**.
+
+### Run all tests:
+
+```bash
+yarn test
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Run tests with coverage:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+yarn test --coverage
 ```
+
+Test coverage includes:
+
+- Validation logic and error handling in Step 1
+- Dynamic interests selection (mocked from MSW)
+- File upload, image preview, and validation in Step 2
+- Integration tests for navigating between steps
+
+## Folder Structure Overview
+```
+blackdeep-form/
+├── public/               # Static assets like favicon, robots.txt
+├── src/
+|   ├── tests             # Vitest test files
+│   ├── components/       # Reusable UI components
+│   ├── features/         # Components for each form step
+│   ├── mocks/            # API and mock server setup
+│   ├── styles/           # Global styles and theming
+│   ├── schemas/          # Zod schemas for form validation
+│   ├── App.tsx           # Main app component
+│   └── main.tsx          # Entry point
+├── .gitignore
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+### Important Notes
+- The project uses Vite as the build tool.
+- Form validation is done with Zod integrated into react-hook-form.
+- Mock server is implemented to simulate API calls for the interests list and registration submission.
+- Chakra UI is used for consistent styling and responsive design.
+- Multi-step form logic is managed via React state and form context.
