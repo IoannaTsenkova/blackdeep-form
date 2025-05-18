@@ -10,7 +10,6 @@ async function enableMocks() {
     await worker.start({
       onUnhandledRequest: 'bypass',
     });
-    console.log('✅ MSW started');
   }
 }
 

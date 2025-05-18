@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { FormControl, FormErrorMessage } from "@chakra-ui/form-control";
 import { useFormContext } from "react-hook-form";
-import { stepTwoSchema } from "@/schemas/step-two-schema";
+import { stepTwoSchema } from "../schemas/step-two-schema";
 import type { z } from "zod";
 import { LuUpload } from "react-icons/lu";
 
@@ -84,6 +84,7 @@ const StepTwoForm = ({ onFormSubmit }: { onFormSubmit: () => void }) => {
                 <>
                   <FileUpload.HiddenInput
                     {...register("avatar")}
+                    data-testid="file-input"
                     ref={fileInputRef}
                     onChange={(e) => {
                       const file = e.target.files?.[0];

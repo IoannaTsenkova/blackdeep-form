@@ -1,10 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { test, expect, beforeEach, vi } from "vitest";
 import { FormProvider, useForm } from "react-hook-form";
 import StepOneForm from "../features/step-one-form";
 import { Steps } from "@chakra-ui/react";
 import { Provider } from "../components/ui/provider";
 import userEvent from '@testing-library/user-event';
+import StepTwoForm from "../features/step-two-form";
+import { useState } from "react";
 
 beforeEach(() => {
   globalThis.fetch = vi.fn().mockResolvedValue({
@@ -54,25 +56,52 @@ test('shows validation errors on empty submit', async () => {
   expect(await screen.findByText(/please choose at least 1 interest/i)).toBeInTheDocument();
 });
 
-// test('submits valid step one and proceeds to step two', async () => {
-//   render(<Wrapper />);
+test('submits valid step one and proceeds to step two', async () => {
+  const MultiStepWrapper = () => {
+  const [step, setStep] = useState(0);
+  const methods = useForm({
+    defaultValues: {
+      fullName: "",
+      password: "",
+      confirmPassword: "",
+      interests: [],
+      avatar: undefined,
+    },
+  });
 
-//   await userEvent.type(screen.getByLabelText(/^full name$/i), 'Йоанна Ценкова');
-//   await userEvent.type(screen.getByLabelText(/^password$/i), 'Blackdeep123!');
-//   await userEvent.type(screen.getByLabelText(/^confirm password$/i), 'Blackdeep123!');
+  return (
+    <Provider>
+      <FormProvider {...methods}>
+        <Steps.Root count={2} index={step} onChange={setStep}>
+          
+            <StepOneForm />
+          
+          
+            <StepTwoForm onFormSubmit={() => {}} />
+          
+        </Steps.Root>
+      </FormProvider>
+    </Provider>
+  );
+};
+  render(<MultiStepWrapper />);
 
-//   await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument());
+  await userEvent.type(screen.getByLabelText(/^full name$/i), 'Йоанна Ценкова');
+  await userEvent.type(screen.getByLabelText(/^password$/i), 'Blackdeep123!');
+  await userEvent.type(screen.getByLabelText(/^confirm password$/i), 'Blackdeep123!');
 
-//   const select = screen.getByRole('combobox');
-//   await userEvent.type(select, 'Music');
-//   await userEvent.keyboard('{Enter}');
-//   await userEvent.type(select, 'Dancing');
-//   await userEvent.keyboard('{Enter}');
+  await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument());
 
-//   const submitBtn = screen.getByRole('button', { name: /next step/i });
-//   await userEvent.click(submitBtn);
+  const select = screen.getByRole('combobox');
+  await userEvent.type(select, 'Music');
+  await userEvent.keyboard('{Enter}');
+  await userEvent.type(select, 'Dancing');
+  await userEvent.keyboard('{Enter}');
 
-//   await waitFor(() =>
-//   expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
-// );
-// });
+  const submitBtn = screen.getByRole('button', { name: /next step/i });
+  await userEvent.click(submitBtn);
+
+  await waitFor(() =>
+  expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
+);
+});

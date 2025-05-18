@@ -8,8 +8,7 @@ export const handlers = [
   }),
 
  http.post("/api/register", async ({ request }) => {
-  const body = await request.formData();
-  console.log("📥 MOCK REGISTER:", Object.fromEntries(body.entries()));
+  await request.formData();
   return HttpResponse.json({ success: true });
 })
 ];
