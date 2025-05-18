@@ -1,8 +1,18 @@
 
-# Blackdeep Registration Form
+# 📝 Blackdeep Registration Form
 
-## Project Description
-This project is a multi-step registration form built with React, TypeScript, and Chakra UI. It uses react-hook-form and Zod for form handling and validation, and features a mock server to simulate API requests. The form consists of two steps: selecting interests and providing personal details. It aims to demonstrate best practices in frontend development and form management.
+This multi-step registration form is built with **React**, **TypeScript**, **Chakra UI**, **React Hook Form**, **Zod**, and **Mock Service Worker (MSW)**. The form includes two steps:
+
+1. **Step 1**: Collects full name, password, confirm password, and interests (with multiselect).
+2. **Step 2**: Allows uploading an avatar image with preview functionality.
+
+The form includes validation, navigation between steps, and runs in both development and production environments.
+
+
+## 🚀 Live Demo
+
+👉 [https://blackdeep-form.vercel.app](https://blackdeep-form.vercel.app)
+
 
 ## Setup and Running Locally
 
@@ -26,11 +36,35 @@ This project is a multi-step registration form built with React, TypeScript, and
    ```
 4. Open your browser and navigate to `http://localhost:5173` to see the app running.
 
+## 🧪 Running Tests
+
+This project uses **Vitest** and **React Testing Library**.
+
+### Run all tests:
+
+```bash
+yarn test
+```
+
+### Run tests with coverage:
+
+```bash
+yarn test --coverage
+```
+
+Test coverage includes:
+
+- Validation logic and error handling in Step 1
+- Dynamic interests selection (mocked from MSW)
+- File upload, image preview, and validation in Step 2
+- Integration tests for navigating between steps
+
 ## Folder Structure Overview
 ```
 blackdeep-form/
 ├── public/               # Static assets like favicon, robots.txt
 ├── src/
+|   ├── tests             # Vitest test files
 │   ├── components/       # Reusable UI components
 │   ├── features/         # Components for each form step
 │   ├── mocks/            # API and mock server setup
