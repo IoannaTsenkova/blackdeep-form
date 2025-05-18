@@ -4,14 +4,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import StepOneForm from "../features/step-one-form";
 import { Steps } from "@chakra-ui/react";
 import { Provider } from "../components/ui/provider";
-import userEvent from '@testing-library/user-event';
+import userEvent from "@testing-library/user-event";
 import StepTwoForm from "../features/step-two-form";
-import { useState } from "react";
 
 beforeEach(() => {
   globalThis.fetch = vi.fn().mockResolvedValue({
     ok: true,
-    json: async () => ['Sports', 'Music', 'Dancing', 'Games'],
+    json: async () => ["Sports", "Music", "Dancing", "Games"],
   }) as unknown as typeof fetch;
 });
 
@@ -44,64 +43,72 @@ test("renders all fields", () => {
   expect(screen.getByText(/interests/i)).toBeInTheDocument();
 });
 
-test('shows validation errors on empty submit', async () => {
+test("shows validation errors on empty submit", async () => {
   render(<Wrapper />);
 
-  const button = screen.getByRole('button', { name: /next step/i });
+  const button = screen.getByRole("button", { name: /next step/i });
   await userEvent.click(button);
 
-  expect(await screen.findByText(/please enter your name/i)).toBeInTheDocument();
-  expect(await screen.findByText(/the password must be at least 6 characters long/i)).toBeInTheDocument();
-  expect(await screen.findByText(/the confirm password must be at least 6 characters long/i)).toBeInTheDocument();
-  expect(await screen.findByText(/please choose at least 1 interest/i)).toBeInTheDocument();
+  expect(
+    await screen.findByText(/please enter your name/i)
+  ).toBeInTheDocument();
+  expect(
+    await screen.findByText(/the password must be at least 6 characters long/i)
+  ).toBeInTheDocument();
+  expect(
+    await screen.findByText(
+      /the confirm password must be at least 6 characters long/i
+    )
+  ).toBeInTheDocument();
+  expect(
+    await screen.findByText(/please choose at least 1 interest/i)
+  ).toBeInTheDocument();
 });
 
-test('submits valid step one and proceeds to step two', async () => {
+test("submits valid step one and proceeds to step two", async () => {
   const MultiStepWrapper = () => {
-  const [step, setStep] = useState(0);
-  const methods = useForm({
-    defaultValues: {
-      fullName: "",
-      password: "",
-      confirmPassword: "",
-      interests: [],
-      avatar: undefined,
-    },
-  });
+    const methods = useForm({
+      defaultValues: {
+        fullName: "",
+        password: "",
+        confirmPassword: "",
+        interests: [],
+        avatar: undefined,
+      },
+    });
 
-  return (
-    <Provider>
-      <FormProvider {...methods}>
-        <Steps.Root count={2} index={step} onChange={setStep}>
-          
+    return (
+      <Provider>
+        <FormProvider {...methods}>
+          <Steps.Root count={2}>
             <StepOneForm />
-          
-          
             <StepTwoForm onFormSubmit={() => {}} />
-          
-        </Steps.Root>
-      </FormProvider>
-    </Provider>
-  );
-};
+          </Steps.Root>
+        </FormProvider>
+      </Provider>
+    );
+  };
   render(<MultiStepWrapper />);
 
-  await userEvent.type(screen.getByLabelText(/^full name$/i), 'Йоанна Ценкова');
-  await userEvent.type(screen.getByLabelText(/^password$/i), 'Blackdeep123!');
-  await userEvent.type(screen.getByLabelText(/^confirm password$/i), 'Blackdeep123!');
+  await userEvent.type(screen.getByLabelText(/^full name$/i), "Йоанна Ценкова");
+  await userEvent.type(screen.getByLabelText(/^password$/i), "Blackdeep123!");
+  await userEvent.type(
+    screen.getByLabelText(/^confirm password$/i),
+    "Blackdeep123!"
+  );
 
-  await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole("combobox")).toBeInTheDocument());
 
-  const select = screen.getByRole('combobox');
-  await userEvent.type(select, 'Music');
-  await userEvent.keyboard('{Enter}');
-  await userEvent.type(select, 'Dancing');
-  await userEvent.keyboard('{Enter}');
+  const select = screen.getByRole("combobox");
+  await userEvent.type(select, "Music");
+  await userEvent.keyboard("{Enter}");
+  await userEvent.type(select, "Dancing");
+  await userEvent.keyboard("{Enter}");
 
-  const submitBtn = screen.getByRole('button', { name: /next step/i });
+  const submitBtn = screen.getByRole("button", { name: /next step/i });
   await userEvent.click(submitBtn);
 
   await waitFor(() =>
-  expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
-);
+    expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument()
+  );
 });
