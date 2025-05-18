@@ -4,9 +4,13 @@ import App from "./App.tsx";
 
 import { Provider } from "@/components/ui/provider";
 
-if (import.meta.env.VITE_USE_MSW === "true") {
+const initMock = async () => {
   const { worker } = await import('./mocks/browser');
   await worker.start();
+};
+
+if (import.meta.env.DEV || import.meta.env.VITE_USE_MSW === 'true') {
+  initMock();
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
